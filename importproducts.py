@@ -8,26 +8,42 @@ import time
 import csv
 import json
 
+prestaShopImportUrl = ""
+
+WEBSITE_URL = "http://vps-59148.fhnet.fr"
+
+SCROLL_PAUSE_TIME = 3
 
 def open_url( url, webdriver):
     # Navigate to a whatever url recommended for setting cookies
-    webdriver.get('http://188.213.25.132/404')
-    webdriver.add_cookie({'name' : 'PHPSESSID', 'value' : 'b6n2991vc08j0utdh2ljepqk6t', 'http://188.213.25.132' : url})
+    webdriver.get(WEBSITE_URL + '/404')
+    webdriver.add_cookie({'name' : 'PHPSESSID', 'value' : 'e70ic7c2ngakrl88cgftp8t4cj', WEBSITE_URL : url})
     webdriver.add_cookie({'name': 'PrestaShop-cbac049c40e842298a95cd1e70b00bde',
-                          'value': 'def5020093fcdf5c69e8a92c588e963889b3da73242e83bd4be359393c8bf9487de356168b89124d5f19d6e13141854dea7782424535f8dbab60d544c803d642372e56a380b38c24a45f53ce27f143b2322ec80ac30d04bcbfbd8e851653e54fa1e0fdf523cc31bf9c92ec3a62e1097dbb99b8551319d029b07f00444ba8510c1fb2e31e61950ec1c5a8a4fb1699e887ab8096bf6e48776617a067ec2bf282aa1316a846ec52460cb48b3c09c1fee47a49f9cba7c485eca54b119dcec5df4bba8c19c91c40ccaa043ca7546d1812c4b2bcd408b5608742add46f50e8a4f1716e1256bd57ada0114edce830fc335736cdf489d66dff511dcab5881770256d173d8337292a246872e818dc068e00a22f7ef11cbcb1905e972421a11e14536220b96974e21ce9209024df473084c71fb07da5a2a58d0d846ff5044e64494f0706c6b5a1b9da6eec6d615a2b35622d63fc324910fabaf491becd70186b2a25f70d264640f279ba48eb0f55733b10aa695646b3f8c2ab02d5e11603d2dab711172d13369330bfae1c5324d15297c710125236911bbd8d05848f92fc3f9a4e3a3802d47b104dc1117ac0d940a416794abc89c23ba5b33f564d879ad70d1efbfc7a5474fe10b460d589f0ad7954b51d891a0ea3c94adbeb434d6acb1c2562d5a6f1d0ead4e7ed65af28ad71d500df72dbc4', 'http://188.213.25.132': url})
+                          'value': 'def5020081fc5e910fb96c9ffe631a5084654b6213c2ccb9b9e81a198d7bf25dfb66b201076cc819a4c9616d16b3625cfeb807a039b9e0f93cdbe23c4719036d6d4452e4a9a9c5f457e9141c2725f0029422481f87040017a773a26e2e1e4f7674f5bb75ef762edf54c647a22ed4596fe0d80a3108a529b65c2e34df2b79f931de50171764c24b018a1381d5d8a937914795dffc0b2450c18952c9d03d76c132a3c533fafc994845f1591b3d5656c5764d7eb15913f116d40c7d0b08b1849e38d9'
+                          , 'http://188.213.25.132': url})
     webdriver.get(url)
 
 def importproduct(url, driver):
     # mohamed-oumarou@live.com nuages1200$
     #email passwd submit_login
     #connectAsAdmin(driver)
-    prestaShopImportUrl = 'http://188.213.25.132/admin048j6acmk/index.php/sell/catalog/products?_token=3e2CQ5eUJcEaH9TBOQrBR3a4xfjMGXvk3wlRksAdmSg'
-    driver.get(prestaShopImportUrl)
-    #open_url(prestaShopImportUrl, driver)
 
+    global prestaShopImportUrl
+
+    if(prestaShopImportUrl != ""):
+        driver.get(prestaShopImportUrl)
+        time.sleep(SCROLL_PAUSE_TIME)
+
+    prestaShopImportUrl = driver.current_url;
+
+    #prestaShopImportUrl = 'http://188.213.25.132/admin048j6acmk/index.php/sell/catalog/products?_token=j-k-FceY1PvzdQfSIj4_Lrl4OeJAM7tTmbUDbujTd5M'
+    #driver.get(prestaShopImportUrl)
+    #open_url(prestaShopImportUrl, driver)
     # Click import button
     btnImportProducts = driver.find_element_by_id('ats-copy_product')
     btnImportProducts.click()
+
+    #time.sleep(SCROLL_PAUSE_TIME)
 
     inputImportProduct = driver.find_element_by_id('module-copy-url')
     driver.implicitly_wait(30)
@@ -43,10 +59,37 @@ def importproduct(url, driver):
     ElementSelectAll = driver.find_element_by_id('ats-select-unselect-all')
     ElementSelectAll.click()
 
+    #time.sleep(SCROLL_PAUSE_TIME)
+
+    ElementSelectAll = driver.find_element_by_name('sku')
+    ElementSelectAll.click()
+
+    #time.sleep(SCROLL_PAUSE_TIME)
+
+    ElementSelectAll = driver.find_element_by_name('meta_title')
+    ElementSelectAll.click()
+
+    #time.sleep(SCROLL_PAUSE_TIME)
+
+    ElementSelectAll = driver.find_element_by_name('meta_description')
+    ElementSelectAll.click()
+
+    #time.sleep(SCROLL_PAUSE_TIME)
+
+    ElementSelectAll = driver.find_element_by_name('meta_keywords')
+    ElementSelectAll.click()
+
+    #time.sleep(SCROLL_PAUSE_TIME)
+
+    #ElementSelectAll = driver.find_element_by_name('description')
+    #ElementSelectAll.click()
+
+    #time.sleep(SCROLL_PAUSE_TIME)
+
     inputImportProduct.send_keys(Keys.RETURN)
 
 def connectAsAdmin(driver) :
-    adminPageUrl = 'http://188.213.25.132/admin048j6acmk'
+    adminPageUrl = WEBSITE_URL + '/admin088yzklkw'
     open_url(adminPageUrl, driver)
     try:
         email = driver.find_element_by_id('email')
@@ -54,7 +97,9 @@ def connectAsAdmin(driver) :
         submit = driver.find_element_by_id('submit_login')
 
         email.send_keys('mohamed-oumarou@live.com')
-        password.send_keys('nuages1200$')
+        #password.send_keys('nuages1200$')
+        password.send_keys('boutique1200')
+        time.sleep(SCROLL_PAUSE_TIME)
         submit.click()
 
         driver.implicitly_wait(1)
@@ -72,21 +117,37 @@ def connectAsAdmin(driver) :
 
 def main():
     driver = webdriver.Chrome('./bin/chromedriver.exe')
-    print("Bienvenu au crawler Linkdin")
-    keyword = "finance"
-    SCROLL_PAUSE_TIME = 0.9
+
+    driver.implicitly_wait(30)
 
     connectAsAdmin(driver)
+
+    driver.implicitly_wait(30)
+
+    time.sleep(SCROLL_PAUSE_TIME)
+
+    element = driver.find_element_by_id('subtab-AdminCatalog')
+    element.click()
+
+    time.sleep(SCROLL_PAUSE_TIME)
+
+    element = driver.find_element_by_id('subtab-AdminProducts')
+    element.click()
+
+    time.sleep(SCROLL_PAUSE_TIME)
+
     with open('data.json') as json_file:
         data = json.load(json_file)
+        time.sleep(SCROLL_PAUSE_TIME)
         for p in data:
             print('url: ' + p['url'])
             importproduct(p['url'], driver)
             time.sleep(SCROLL_PAUSE_TIME)
 
+def test():
+    driver = webdriver.Chrome('./bin/chromedriver.exe')
+    driver.get('https://www.amazon.fr/Badabulle-BADABULLE-Transat-en-hauteur-compactup/dp/B07LB8KB62')
+
 
 if __name__ == '__main__':
     main()
-
-
-
